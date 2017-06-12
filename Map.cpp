@@ -6,6 +6,11 @@ char* tilemap::operator[](int x)
 	return &map[x * h];
 }
 
+bool tilemap::is_valid(int x, int y)
+{
+	return x >= 0 && y >= 0 && x < w && y < h;
+}
+
 map_reader::map_reader(tilemap& map, const std::string& filename)
 {
 	bitmap bmp;
@@ -31,18 +36,17 @@ map_reader::map_reader(tilemap& map, const std::string& filename)
 			unsigned char pixel = bmp.get(h - y - 1, x);
 
 			map.map[index] = pixel_to_tile(pixel);
-			if (map.map[index] == tilemap::etile::start) map.s = std::make_pair(x, y);
-			if (map.map[index] == tilemap::etile::finish) map.f = std::make_pair(x, y);
+			if (map.map[index] == etile::start) map.s = point(x ,y);
+			if (map.map[index] == etile::finish) map.f = point(x, y);
 		}
 	}
-
-	map.initialized = true;
 }
 
 char map_reader::pixel_to_tile(unsigned char p)
 {
-	if (p == bitmap::ecolor::white) return tilemap::etile::empty;
-	if (p == bitmap::ecolor::red) return tilemap::etile::start;
-	if (p == bitmap::ecolor::blue) return tilemap::etile::finish;
-	return tilemap::etile::wall;
+	if (p == bitmap::ecolor::white) return etile::empty;
+	if (p == bitmap::ecolor::red) return etile::start;
+	if (p == bitmap::ecolor::blue) return etile::finish;
+	return etile::wall;
 }
+

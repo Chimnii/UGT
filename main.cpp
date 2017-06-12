@@ -1,5 +1,5 @@
 #include <iostream>
-#include "Map.h"
+#include "Pathfinder.h"
 
 //#define DEBUG
 
@@ -7,10 +7,14 @@ int main()
 {
 	tilemap map;
 	map_reader reader(map, "map.bmp");
-	if (!map.initialized)
+	if (!map.initialized())
 	{
 		return 0;
 	}
+
+	pathfinder_d dijkstra(map);
+	dijkstra.init();
+	dijkstra.find_path(map.s, map.f);
 
 #ifdef DEBUG
 	freopen("output.txt", "w", stdout);
