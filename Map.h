@@ -1,10 +1,12 @@
 #pragma once
+#include <memory>
 #include <vector>
-#include "Bitmap.h"
+#include <string>
 
-class tilemap
+using point = std::pair<int, int>;
+
+struct tilemap
 {
-public:
 	enum etile : char
 	{
 		empty = '.',
@@ -13,13 +15,20 @@ public:
 		finish = 'f'
 	};
 
-	bool readmap(const char* filename);
-	const int w() const { return width; }
-	const int h() const { return height; }
+	int w, h;
+	point s, f;
+
+	bool initialized;
+	std::vector<char> map;
+
 	char* operator[](int x);
+};
+
+class map_reader
+{
+public:
+	map_reader(tilemap& map, const std::string& filename);
 
 private:
 	char pixel_to_tile(unsigned char p);
-	int width, height;
-	std::vector<char> map;
 };
