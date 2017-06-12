@@ -6,7 +6,7 @@
 int main()
 {
 	tilemap map;
-	map_reader reader(map, "map.bmp");
+	map_reader reader(map, "Map\\map.bmp");
 	if (!map.initialized())
 	{
 		return 0;
