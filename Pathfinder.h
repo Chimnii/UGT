@@ -49,19 +49,20 @@ struct node
 class ipathfinder
 {
 public:
-	ipathfinder(tilemap& _map) : map(_map), result_map(_map) {}
-	virtual void init() = 0;
+	ipathfinder(tilemap& _map, std::vector<point>& _path, tilemap* _result_map = nullptr) : map(_map), path(_path), result_map(_result_map) {}
+	virtual void init();
 	virtual bool find_path(point s, point f) = 0;
 
 protected:
 	tilemap& map;
-	tilemap result_map;
+	tilemap* result_map;
+	std::vector<point>& path;
 };
 
 class pathfinder_d : public ipathfinder
 {
 public:
-	pathfinder_d(tilemap& _map) : ipathfinder(_map) {}
+	pathfinder_d(tilemap& _map, std::vector<point>& _path, tilemap* _result_map = nullptr) : ipathfinder(_map, _path, _result_map) {}
 	virtual void init();
 	virtual bool find_path(point s, point f);
 
@@ -71,6 +72,7 @@ private:
 	bool is_closed(node& n);
 	void set_opened(node& n);
 	void set_closed(node& n);
+	void set_resultmap(point& pos, char c);
 	std::priority_queue<dist_point, std::vector<dist_point>, std::greater<dist_point>> queue;
 	std::unordered_map<point, node> searched;
 	point s, f;

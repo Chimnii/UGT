@@ -1,8 +1,18 @@
 #include <iostream>
 #include "Pathfinder.h"
 
+void ipathfinder::init()
+{
+	if (result_map)
+	{
+		*result_map = map;
+	}
+}
+
 void pathfinder_d::init()
 {
+	ipathfinder::init();
+
 	queue.swap(decltype(queue)());
 	searched.clear();
 }
@@ -13,33 +23,14 @@ bool pathfinder_d::find_path(point s, point f)
 	this->f = f;
 	find_path_impl();
 
-#ifdef DEBUG
-	std::vector<point> path;
 	node& n = searched[f];
 	while (n.prev != invalid_pos)
 	{
 		path.emplace_back(n.pos);
+		set_resultmap(n.pos, etile::path);
 		n = searched[n.prev];
 	}
 	std::reverse(path.begin(), path.end());
-
-	for (auto& p : path)
-	{
-		std::cout << p.x << ", " << p.y << std::endl;
-		if (p != s && p != f)
-			result_map[p] = etile::path;
-	}
-
-	freopen("output.txt", "w", stdout);
-	for (int y = result_map.h-1; y >= 0; --y)
-	{	
-		for (int x = 0; x < result_map.w; ++x)
-		{
-			std::cout << result_map[point(x, y)];
-		}
-		std::cout << std::endl;
-	}
-#endif
 
 	return true;
 }
@@ -107,17 +98,20 @@ bool pathfinder_d::is_closed(node& n)
 void pathfinder_d::set_opened(node& n)
 {
 	n.set_opened();
-	if (n.pos != s && n.pos != f)
-	{
-		result_map[n.pos] = etile::open;
-	}
+	set_resultmap(n.pos, etile::open);
 }
 
 void pathfinder_d::set_closed(node& n)
 {
 	n.set_closed();
-	if (n.pos != s && n.pos != f)
+	set_resultmap(n.pos, etile::close);
+}
+
+void pathfinder_d::set_resultmap(point& pos, char c)
+{
+	if (result_map)
 	{
-		result_map[n.pos] = etile::close;
+		if (pos != s && pos != f)
+			(*result_map)[pos] = c;
 	}
 }

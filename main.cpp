@@ -1,7 +1,9 @@
+#pragma warning(disable:4996)
 #include <iostream>
 #include "Pathfinder.h"
 
-//#define DEBUG
+#define PATH 1
+#define MAP_OUTPUT 0
 
 int main()
 {
@@ -12,17 +14,32 @@ int main()
 		return 0;
 	}
 
-	pathfinder_d dijkstra(map);
+	std::vector<point> path;
+	tilemap* result_map = nullptr;
+#if MAP_OUTPUT
+	freopen("output.txt", "w", stdout);
+
+	tilemap _result_map;
+	result_map = &_result_map;
+#endif
+	
+	pathfinder_d dijkstra(map, path, result_map);
 	dijkstra.init();
 	dijkstra.find_path(map.s, map.f);
 
-#ifdef DEBUG
-	freopen("output.txt", "w", stdout);
-	for (int y = map.h-1; y >= 0; --y)
+#if PATH
+	for (auto& p : path)
+	{
+		std::cout << p.x << ", " << p.y << std::endl;
+	}
+#endif
+
+#if MAP_OUTPUT
+	for (int y = result_map->h-1; y >= 0; --y)
 	{	
-		for (int x = 0; x < map.w; ++x)
+		for (int x = 0; x < result_map->w; ++x)
 		{
-			std::cout << map[x][y];
+			std::cout << (*result_map)[point(x, y)];
 		}
 		std::cout << std::endl;
 	}
