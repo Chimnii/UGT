@@ -15,6 +15,7 @@ protected:
 
 private:
 	bool find_path_with_astar();
+	double hvalue(const point& p);
 
 	std::priority_queue<dist_point, std::vector<dist_point>, std::greater<dist_point>> queue;
 	std::unordered_map<point, node> searched;

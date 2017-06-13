@@ -1,9 +1,10 @@
 #pragma once
+#include <cmath>
 #include "Map.h"
 #include "PathfindStatistics.h"
 
-constexpr double d_hz = 1.0;
-constexpr double d_dg = 1.414;
+const double d_hz = 1.0;
+const double d_dg = std::sqrt<int>(2);
 
 const point invalid_pos(-1, -1);
 
