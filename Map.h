@@ -23,32 +23,23 @@ struct point
 	point(int _x, int _y) : x(_x), y(_y) {}
 
 	bool operator==(const point& o) const { return x == o.x && y == o.y; }
-	//bool operator<(const point& o) const { return x < o.x; }
 	point operator+(const point& o) const { return point(x+o.x, y+o.y); }
 
 	int x, y;
 };
 
-namespace std
-{
-    template<>
-    struct hash<point>
-    {
-        size_t operator()(point const& p) const
-        {
-            return (p.x << 16) + p.y;
-        }
-    };
-}
-
 struct tilemap
 {
+	friend class map_reader;
+
 	char* operator[](int x);
 	bool is_valid(int x, int y);
 	bool initialized() { return map.size() > 0; }
 
 	int w, h;
 	point s, f;
+
+private:
 	std::vector<char> map;
 };
 

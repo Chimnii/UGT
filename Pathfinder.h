@@ -6,7 +6,20 @@
 
 constexpr double d_hz = 1.0;
 constexpr double d_dg = 1.414;
+
 const point invalid_pos(-1, -1);
+
+namespace std
+{
+    template<>
+    struct hash<point>
+    {
+        size_t operator()(point const& p) const
+        {
+            return (p.x << 16) + p.y;
+        }
+    };
+}
 
 struct dist_point
 {
@@ -26,7 +39,6 @@ struct node
 	point pos, prev;
 	double dist;
 
-	//bool is_visited() { return opened || closed; }
 	bool is_opened() { return opened; }
 	bool is_closed() { return closed; }
 	void set_opened() { opened = true; }
