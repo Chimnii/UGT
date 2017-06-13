@@ -1,6 +1,6 @@
 #pragma warning(disable:4996)
 #include <iostream>
-#include "Pathfinder.h"
+#include "Dijkstra.h"
 #include "PathfindStatistics.h"
 
 #define FILE_OUTPUT 0

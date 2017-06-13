@@ -143,10 +143,12 @@
     <ClCompile Include="Dijkstra.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Map.cpp" />
+    <ClCompile Include="Pathfinder.cpp" />
     <ClCompile Include="PathfindStatistics.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Bitmap.h" />
+    <ClInclude Include="Dijkstra.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="Pathfinder.h" />
     <ClInclude Include="PathfindStatistics.h" />
