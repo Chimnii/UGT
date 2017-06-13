@@ -3,12 +3,22 @@
 #include "Pathfinder.h"
 #include "PathfindStatistics.h"
 
+#define FILE_OUTPUT 0
 #define STATISTICS 1
 #define PATH 0
-#define MAP_OUTPUT 0
+#define RESULTMAP 0
+
+#if RESULTMAP
+#undef FILE_OUTPUT
+#define FILE_OUTPUT 1
+#endif
 
 int main()
 {
+#if FILE_OUTPUT
+	freopen("output.txt", "w", stdout);
+#endif
+
 	tilemap map;
 	map_reader reader(map, "Map\\map.bmp");
 	if (!map.initialized())
@@ -19,9 +29,6 @@ int main()
 	std::vector<point> path;
 	pathfind_statistics statistics;
 	tilemap result_map;
-#if MAP_OUTPUT
-	freopen("output.txt", "w", stdout);
-#endif
 	
 	pathfinder_d dijkstra(map, path, &statistics, &result_map);
 	dijkstra.init();
@@ -40,7 +47,7 @@ int main()
 	}
 #endif
 
-#if MAP_OUTPUT
+#if RESULTMAP
 	for (int y = result_map.h-1; y >= 0; --y)
 	{	
 		for (int x = 0; x < result_map.w; ++x)
