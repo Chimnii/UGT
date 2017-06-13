@@ -1,7 +1,8 @@
 #pragma warning(disable:4996)
 #include <iostream>
-#include "Dijkstra.h"
 #include "PathfindStatistics.h"
+#include "Dijkstra.h"
+#include "Astar.h"
 
 #define FILE_OUTPUT 0
 #define STATISTICS 1
@@ -13,6 +14,11 @@
 #define FILE_OUTPUT 1
 #endif
 
+std::vector<point> path;
+pathfind_statistics statistics;
+tilemap result_map;
+
+void print();
 int main()
 {
 #if FILE_OUTPUT
@@ -26,15 +32,31 @@ int main()
 		return 0;
 	}
 
-	std::vector<point> path;
-	pathfind_statistics statistics;
-	tilemap result_map;
-	
 	pathfinder_d dijkstra(map, path, &statistics, &result_map);
 	dijkstra.init();
 	dijkstra.find_path(map.s, map.f);
 
-#if STATISTICS
+#if STATISTICS | PATH | RESULTMAP
+	std::cout << "Dijkstra:" << std::endl;
+	print();
+#endif
+
+	pathfinder_a astar(map, path, &statistics, &result_map);
+	astar.init();
+	astar.find_path(map.s, map.f);
+
+#if STATISTICS | PATH | RESULTMAP
+	std::cout << "A*:" << std::endl;
+	print();
+#endif
+
+
+	return 0;
+}
+
+void print()
+{
+	#if STATISTICS
 	std::cout << "open node : " << statistics.get_open_node() << std::endl;
 	std::cout << "close node : " << statistics.get_close_node() << std::endl;
 	std::cout << "elapsed time : " << statistics.get_elapsed_time_ms() << "ms" << std::endl;
@@ -57,6 +79,4 @@ int main()
 		std::cout << std::endl;
 	}
 #endif
-
-	return 0;
 }

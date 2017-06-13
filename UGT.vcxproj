@@ -139,6 +139,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Astar.cpp" />
     <ClCompile Include="Bitmap.cpp" />
     <ClCompile Include="Dijkstra.cpp" />
     <ClCompile Include="main.cpp" />
@@ -147,6 +148,7 @@
     <ClCompile Include="PathfindStatistics.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Astar.h" />
     <ClInclude Include="Bitmap.h" />
     <ClInclude Include="Dijkstra.h" />
     <ClInclude Include="Map.h" />
