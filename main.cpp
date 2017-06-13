@@ -1,18 +1,10 @@
 #pragma warning(disable:4996)
 #include <iostream>
+#include "macro.h"
 #include "PathfindStatistics.h"
 #include "Dijkstra.h"
 #include "Astar.h"
-
-#define FILE_OUTPUT 0
-#define STATISTICS 1
-#define PATH 0
-#define RESULTMAP 0
-
-#if RESULTMAP
-#undef FILE_OUTPUT
-#define FILE_OUTPUT 1
-#endif
+#include "JPS.h"
 
 std::vector<point> path;
 pathfind_statistics statistics;
@@ -26,7 +18,7 @@ int main()
 #endif
 
 	tilemap map;
-	map_reader reader(map, "Map\\map.bmp");
+	map_reader reader(map, "Map\\simple_map.bmp");
 	if (!map.initialized())
 	{
 		return 0;
@@ -50,6 +42,14 @@ int main()
 	print();
 #endif
 
+	pathfinder_j jps(map, path, &statistics, &result_map);
+	jps.init();
+	jps.find_path(map.s, map.f);
+
+#if STATISTICS | PATH | RESULTMAP
+	std::cout << "JPS:" << std::endl;
+	print();
+#endif
 
 	return 0;
 }

@@ -36,6 +36,9 @@
     <ClCompile Include="Astar.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="JPS.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Bitmap.h">
@@ -54,6 +57,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Astar.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="JPS.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="macro.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
