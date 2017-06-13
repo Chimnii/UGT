@@ -1,12 +1,40 @@
 #include <iostream>
 #include "Pathfinder.h"
 
+ipathfinder::ipathfinder(tilemap& _map, std::vector<point>& _path, pathfind_statistics* _statistics, tilemap* _result_map)
+ : map(_map), path(_path), statistics(_statistics), result_map(_result_map)
+{
+}
+
 void ipathfinder::init()
 {
+	path.clear();
+
+	if (statistics)
+	{
+		statistics->clear();
+	}
+
 	if (result_map)
 	{
 		*result_map = map;
 	}
+}
+
+bool ipathfinder::find_path(point s, point f)
+{
+	this->s = s;
+	this->f = f;
+
+	if (statistics)
+		statistics->set_begin_time();
+
+	find_path_impl();
+
+	if (statistics)
+		statistics->set_end_time();
+
+	return true;
 }
 
 void pathfinder_d::init()
@@ -17,17 +45,15 @@ void pathfinder_d::init()
 	searched.clear();
 }
 
-bool pathfinder_d::find_path(point s, point f)
+bool pathfinder_d::find_path_impl()
 {
-	this->s = s;
-	this->f = f;
-	find_path_impl();
+	find_path_with_dijkstra();
 
 	node& n = searched[f];
 	while (n.prev != invalid_pos)
 	{
 		path.emplace_back(n.pos);
-		set_resultmap(n.pos, etile::path);
+		write_resultmap(n.pos, etile::path);
 		n = searched[n.prev];
 	}
 	std::reverse(path.begin(), path.end());
@@ -35,7 +61,7 @@ bool pathfinder_d::find_path(point s, point f)
 	return true;
 }
 
-bool pathfinder_d::find_path_impl()
+bool pathfinder_d::find_path_with_dijkstra()
 {
 	node start;
 	start.pos = s;
@@ -98,16 +124,29 @@ bool pathfinder_d::is_closed(node& n)
 void pathfinder_d::set_opened(node& n)
 {
 	n.set_opened();
-	set_resultmap(n.pos, etile::open);
+	incr_statistics(etile::open);
+	write_resultmap(n.pos, etile::open);
 }
 
 void pathfinder_d::set_closed(node& n)
 {
 	n.set_closed();
-	set_resultmap(n.pos, etile::close);
+	incr_statistics(etile::close);
+	write_resultmap(n.pos, etile::close);
 }
 
-void pathfinder_d::set_resultmap(point& pos, char c)
+void pathfinder_d::incr_statistics(char c)
+{
+	if (statistics)
+	{
+		if (c == etile::open)
+			statistics->incr_opened();
+		if (c == etile::close)
+			statistics->incr_closed();
+	}
+}
+
+void pathfinder_d::write_resultmap(point& pos, char c)
 {
 	if (result_map)
 	{
