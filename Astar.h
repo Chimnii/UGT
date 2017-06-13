@@ -1,4 +1,7 @@
 #pragma once
+#include <queue>
+#include <unordered_map>
+#include <functional>
 #include "Pathfinder.h"
 
 class pathfinder_a : public ipathfinder
@@ -9,4 +12,10 @@ public:
 
 protected:
 	virtual bool find_path_impl();
+
+private:
+	bool find_path_with_astar();
+
+	std::priority_queue<dist_point, std::vector<dist_point>, std::greater<dist_point>> queue;
+	std::unordered_map<point, node> searched;
 };

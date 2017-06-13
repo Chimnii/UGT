@@ -1,4 +1,7 @@
 #pragma once
+#include <queue>
+#include <unordered_map>
+#include <functional>
 #include "Pathfinder.h"
 
 class pathfinder_d : public ipathfinder
@@ -12,12 +15,7 @@ protected:
 
 private:
 	bool find_path_with_dijkstra();
-	bool is_opened(node& n);
-	bool is_closed(node& n);
-	void set_opened(node& n);
-	void set_closed(node& n);
-	void incr_statistics(char c);
-	void write_resultmap(point& pos, char c);
+	
 	std::priority_queue<dist_point, std::vector<dist_point>, std::greater<dist_point>> queue;
 	std::unordered_map<point, node> searched;
 };

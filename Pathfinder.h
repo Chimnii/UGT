@@ -1,7 +1,4 @@
 #pragma once
-#include <queue>
-#include <unordered_map>
-#include <functional>
 #include "Map.h"
 #include "PathfindStatistics.h"
 
@@ -56,6 +53,12 @@ public:
 
 protected:
 	virtual bool find_path_impl() = 0;
+	virtual bool is_opened(node& n);
+	virtual bool is_closed(node& n);
+	virtual void set_opened(node& n);
+	virtual void set_closed(node& n);
+	virtual void incr_statistics(char c);
+	virtual void write_resultmap(point& pos, char c);
 
 protected:
 	tilemap& map;
