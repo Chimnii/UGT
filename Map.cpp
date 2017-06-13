@@ -6,9 +6,14 @@ char* tilemap::operator[](int x)
 	return &map[x * h];
 }
 
-bool tilemap::is_valid(int x, int y)
+char& tilemap::operator[](point p)
 {
-	return x >= 0 && y >= 0 && x < w && y < h;
+	return map[p.x * h + p.y];
+}
+
+bool tilemap::is_valid(point pos)
+{
+	return pos.x >= 0 && pos.y >= 0 && pos.x < w && pos.y < h;
 }
 
 map_reader::map_reader(tilemap& map, const std::string& filename)

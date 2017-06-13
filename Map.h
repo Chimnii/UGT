@@ -9,11 +9,11 @@ namespace etile
 	{
 		empty = '.',
 		wall = '#',
-		start = 's',
-		finish = 'f',
-		open = 'o',
-		close = 'c',
-		path = 'p'
+		start = 'S',
+		finish = 'F',
+		open = '0',
+		close = '1',
+		path = 'P'
 	};
 };
 
@@ -23,6 +23,7 @@ struct point
 	point(int _x, int _y) : x(_x), y(_y) {}
 
 	bool operator==(const point& o) const { return x == o.x && y == o.y; }
+	bool operator!=(const point& o) const { return x != o.x || y != o.y; }
 	point operator+(const point& o) const { return point(x+o.x, y+o.y); }
 
 	int x, y;
@@ -33,7 +34,8 @@ struct tilemap
 	friend class map_reader;
 
 	char* operator[](int x);
-	bool is_valid(int x, int y);
+	char& operator[](point p);
+	bool is_valid(point pos);
 	bool initialized() { return map.size() > 0; }
 
 	int w, h;

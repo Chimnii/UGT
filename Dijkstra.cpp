@@ -9,22 +9,42 @@ void pathfinder_d::init()
 
 bool pathfinder_d::find_path(point s, point f)
 {
-	find_path_impl(s, f);
+	this->s = s;
+	this->f = f;
+	find_path_impl();
 
+#ifdef DEBUG
+	std::vector<point> path;
 	node& n = searched[f];
-	while (true)
+	while (n.prev != invalid_pos)
 	{
-		std::cout << n.pos.x << ", " << n.pos.y << std::endl;
-		if (n.prev == invalid_pos)
-			break;
-
+		path.emplace_back(n.pos);
 		n = searched[n.prev];
 	}
+	std::reverse(path.begin(), path.end());
+
+	for (auto& p : path)
+	{
+		std::cout << p.x << ", " << p.y << std::endl;
+		if (p != s && p != f)
+			result_map[p] = etile::path;
+	}
+
+	freopen("output.txt", "w", stdout);
+	for (int y = result_map.h-1; y >= 0; --y)
+	{	
+		for (int x = 0; x < result_map.w; ++x)
+		{
+			std::cout << result_map[point(x, y)];
+		}
+		std::cout << std::endl;
+	}
+#endif
 
 	return true;
 }
 
-bool pathfinder_d::find_path_impl(point s, point f)
+bool pathfinder_d::find_path_impl()
 {
 	node start;
 	start.pos = s;
@@ -39,10 +59,9 @@ bool pathfinder_d::find_path_impl(point s, point f)
 		queue.pop();
 
 		auto& current_node = searched[current.pos];
-		if (current_node.is_closed())
+		if (is_closed(current_node))
 			continue;
-
-		current_node.set_closed();
+		set_closed(current_node);
 
 		static point direction[8] = { {0, -1}, {0, +1}, {-1, 0}, {+1, 0}, {-1, -1}, {-1, +1}, {+1, -1}, {+1, +1} };
 		for (int i = 0; i < 8; ++i)
@@ -50,21 +69,21 @@ bool pathfinder_d::find_path_impl(point s, point f)
 			double dist = (i < 4) ? d_hz : d_dg;
 
 			dist_point next(current.pos + direction[i], current.dist + dist);
-			if (!map.is_valid(next.pos.x, next.pos.y))
+			if (!map.is_valid(next.pos))
 				continue;
-			if (map[next.pos.x][next.pos.y] == etile::wall)
+			if (map[next.pos] == etile::wall)
 				continue;
 
 			auto& next_node = searched[next.pos];
-			if (next_node.is_closed())
+			if (is_closed(next_node))
 				continue;
-			if (next_node.is_opened() && next_node.dist <= next.dist)
+			if (is_opened(next_node) && next_node.dist <= next.dist)
 				continue;
 			next_node.prev = current.pos;
 			next_node.pos = next.pos;
 			next_node.dist = next.dist;
-			next_node.set_opened();
-
+			set_opened(next_node);
+			
 			queue.emplace(next);
 
 			if (next.pos == f)
@@ -73,4 +92,32 @@ bool pathfinder_d::find_path_impl(point s, point f)
 	}
 
 	return false;
+}
+
+bool pathfinder_d::is_opened(node& n)
+{
+	return n.is_opened();
+}
+
+bool pathfinder_d::is_closed(node& n)
+{
+	return n.is_closed();
+}
+
+void pathfinder_d::set_opened(node& n)
+{
+	n.set_opened();
+	if (n.pos != s && n.pos != f)
+	{
+		result_map[n.pos] = etile::open;
+	}
+}
+
+void pathfinder_d::set_closed(node& n)
+{
+	n.set_closed();
+	if (n.pos != s && n.pos != f)
+	{
+		result_map[n.pos] = etile::close;
+	}
 }
