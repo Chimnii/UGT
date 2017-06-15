@@ -13,6 +13,7 @@ bool pathfinder_a::find_path_impl()
 	find_path_with_astar();
 
 	node& n = searched[f];
+	statistics->set_length(n.dist);
 	while (n.prev != invalid_pos)
 	{
 		path.emplace_back(n.pos);

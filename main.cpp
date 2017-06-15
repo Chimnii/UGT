@@ -38,7 +38,7 @@ int main()
 #if ASTAR
 	pathfinder_a astar(map, path, &statistics, &result_map);
 	astar.init();
-	//astar.find_path(map.s, map.f);
+	astar.find_path(map.s, map.f);
 
 #if STATISTICS | PATH | RESULTMAP
 	std::cout << "A*:" << std::endl;
@@ -63,6 +63,7 @@ int main()
 void print()
 {
 	#if STATISTICS
+	std::cout << "path length : " << statistics.get_length() << std::endl;
 	std::cout << "open node : " << statistics.get_open_node() << std::endl;
 	std::cout << "close node : " << statistics.get_close_node() << std::endl;
 	std::cout << "elapsed time : " << statistics.get_elapsed_time_ms() << "ms" << std::endl;

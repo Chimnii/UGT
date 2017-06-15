@@ -8,6 +8,7 @@ pathfind_statistics::pathfind_statistics()
 
 void pathfind_statistics::clear()
 {
+	length = 0;
 	open_node = 0;
 	close_node = 0;
 	begin_time = decltype(begin_time)();
