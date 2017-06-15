@@ -159,7 +159,9 @@ point pathfinder_j::jump(point current, direction dir)
 		if (jump(n, st_d) != invalid_pos)
 			return n;
 	}
-	return jump(n, dir);
+	if (movable(n, dir))
+		return jump(n, dir);
+	return invalid_pos;
 }
 
 #define CHECK_FORCE(d,w) do { if (!CAN(p+w) && CAN(p+d+w)) return true; } while(0)
