@@ -1,10 +1,5 @@
 #include "Astar.h"
 
-double dist(const point& a, const point& b)
-{
-	return std::sqrt<int>((a.x-b.x)*(a.x-b.x) + (a.y-b.y)*(a.y-b.y));
-}
-
 void pathfinder_a::init()
 {
 	ipathfinder::init();
@@ -38,7 +33,7 @@ bool pathfinder_a::find_path_with_astar()
 	searched[start.pos] = start;
 	queue.emplace(start.pos, start.dist);
 
-	while (queue.size() > 0)
+	while (!queue.empty())
 	{
 		dist_point current = queue.top();
 		queue.pop();

@@ -8,6 +8,8 @@ const double d_dg = std::sqrt<int>(2);
 
 const point invalid_pos(-1, -1);
 
+double dist(const point& a, const point& b);
+
 namespace std
 {
     template<>

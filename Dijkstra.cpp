@@ -33,7 +33,7 @@ bool pathfinder_d::find_path_with_dijkstra()
 	searched[start.pos] = start;
 	queue.emplace(start.pos, start.dist);
 
-	while (queue.size() > 0)
+	while (!queue.empty())
 	{
 		dist_point current = queue.top();
 		queue.pop();

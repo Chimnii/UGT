@@ -1,5 +1,10 @@
 #include "Pathfinder.h"
 
+double dist(const point& a, const point& b)
+{
+	return std::sqrt<int>((a.x-b.x)*(a.x-b.x) + (a.y-b.y)*(a.y-b.y));
+}
+
 ipathfinder::ipathfinder(tilemap& _map, std::vector<point>& _path, pathfind_statistics* _statistics, tilemap* _result_map)
  : map(_map), path(_path), statistics(_statistics), result_map(_result_map)
 {

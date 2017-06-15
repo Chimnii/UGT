@@ -18,12 +18,13 @@ int main()
 #endif
 
 	tilemap map;
-	map_reader reader(map, "Map\\simple_map.bmp");
+	map_reader reader(map, "Map\\map.bmp");
 	if (!map.initialized())
 	{
 		return 0;
 	}
 
+#if DIJKSTRA
 	pathfinder_d dijkstra(map, path, &statistics, &result_map);
 	dijkstra.init();
 	dijkstra.find_path(map.s, map.f);
@@ -31,17 +32,21 @@ int main()
 #if STATISTICS | PATH | RESULTMAP
 	std::cout << "Dijkstra:" << std::endl;
 	print();
-#endif
+#endif	// print
+#endif	// DIJKSTRA
 
+#if ASTAR
 	pathfinder_a astar(map, path, &statistics, &result_map);
 	astar.init();
-	astar.find_path(map.s, map.f);
+	//astar.find_path(map.s, map.f);
 
 #if STATISTICS | PATH | RESULTMAP
 	std::cout << "A*:" << std::endl;
 	print();
-#endif
+#endif	// print
+#endif	// ASTAR
 
+#if JPS
 	pathfinder_j jps(map, path, &statistics, &result_map);
 	jps.init();
 	jps.find_path(map.s, map.f);
@@ -49,7 +54,8 @@ int main()
 #if STATISTICS | PATH | RESULTMAP
 	std::cout << "JPS:" << std::endl;
 	print();
-#endif
+#endif	// print
+#endif	// JPS
 
 	return 0;
 }

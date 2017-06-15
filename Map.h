@@ -36,7 +36,7 @@ struct tilemap
 	char* operator[](int x);
 	char& operator[](point p);
 	bool is_valid(point pos);
-	bool initialized() { return map.size() > 0; }
+	bool initialized() { return !map.empty(); }
 
 	int w, h;
 	point s, f;
