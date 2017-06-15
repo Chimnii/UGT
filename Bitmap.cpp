@@ -20,7 +20,8 @@ bool bitmap::read(const char* filename)
 
 	std::vector<unsigned char> buffer(ih.biSizeImage);
 
-	input.seekg(fh.bfOffBits, input.beg);
+	mid.resize(fh.bfOffBits - sizeof(bitmapfileheader) - sizeof(bitmapinfoheader));
+	input.read((char*)&mid[0], mid.size());
 	input.read((char*)&buffer[0], buffer.size());
 
 	pixels.resize(ih.biHeight * ih.biWidth);
@@ -39,10 +40,38 @@ bool bitmap::read(const char* filename)
 	return true;
 }
 
-const unsigned char bitmap::get(int h, int w) const
+bool bitmap::write(const char* filename)
+{
+	std::ofstream output(filename, std::ios::out | std::ofstream::binary);
+	output.write((char*)&fh, sizeof(bitmapfileheader));
+	output.write((char*)&ih, sizeof(bitmapinfoheader));
+	output.write((char*)&mid[0], mid.size());
+
+	std::vector<unsigned char> buffer(ih.biSizeImage);
+
+	int bi = 0;
+	int padding = ((ih.biWidth + 3) & (~3)) - ih.biWidth;
+	for (int h = 0; h < ih.biHeight; ++h)
+	{
+		for (int w = 0; w < ih.biWidth; ++w)
+		{
+			buffer[bi++] = (unsigned char)get(h, w);
+		}
+		for (int w = 0; w < padding; ++w)
+		{
+			buffer[bi++] = 0;
+		}
+	}
+
+	output.write((char*)&buffer[0], buffer.size());
+
+	return true;
+}
+
+bitmap::ecolor bitmap::get(int h, int w) const
 {
 	int index = h * height() + w;
-	return pixels[index];
+	return bitmap::ecolor(pixels[index]);
 }
 
 void bitmap::set(int h, int w, unsigned char p)

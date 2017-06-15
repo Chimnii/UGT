@@ -6,6 +6,9 @@
 #include "Astar.h"
 #include "JPS.h"
 
+const std::string map_name_prefix = "Map\\map";
+const std::string map_name = map_name_prefix + ".bmp";
+
 std::vector<point> path;
 pathfind_statistics statistics;
 tilemap result_map;
@@ -18,7 +21,7 @@ int main()
 #endif
 
 	tilemap map;
-	map_reader reader(map, "Map\\map3.bmp");
+	map_reader reader(map, map_name);
 	if (!map.initialized())
 	{
 		return 0;
@@ -28,6 +31,7 @@ int main()
 	pathfinder_d dijkstra(map, path, &statistics, &result_map);
 	dijkstra.init();
 	dijkstra.find_path(map.s, map.f);
+	map_writer writer_d(result_map, map_name, map_name_prefix + "_dijkstra.bmp");
 
 #if STATISTICS | PATH | RESULTMAP
 	std::cout << "Dijkstra:" << std::endl;
@@ -39,6 +43,7 @@ int main()
 	pathfinder_a astar(map, path, &statistics, &result_map);
 	astar.init();
 	astar.find_path(map.s, map.f);
+	map_writer writer_a(result_map, map_name, map_name_prefix + "_astar.bmp");
 
 #if STATISTICS | PATH | RESULTMAP
 	std::cout << "A*:" << std::endl;
@@ -50,6 +55,7 @@ int main()
 	pathfinder_j jps(map, path, &statistics, &result_map);
 	jps.init();
 	jps.find_path(map.s, map.f);
+	map_writer writer_j(result_map, map_name, map_name_prefix + "_jps.bmp");
 
 #if STATISTICS | PATH | RESULTMAP
 	std::cout << "JPS:" << std::endl;

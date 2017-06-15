@@ -5,7 +5,7 @@
 
 namespace etile
 {
-	enum
+	enum : char
 	{
 		empty = '.',
 		wall = '#',
@@ -32,6 +32,7 @@ struct point
 struct tilemap
 {
 	friend class map_reader;
+	friend class map_writer;
 
 	char* operator[](int x);
 	char& operator[](point p);
@@ -49,7 +50,10 @@ class map_reader
 {
 public:
 	map_reader(tilemap& map, const std::string& filename);
+};
 
-private:
-	char pixel_to_tile(unsigned char p);
+class map_writer
+{
+public:
+	map_writer(tilemap& map, const std::string& original_filename, const std::string& filename);
 };

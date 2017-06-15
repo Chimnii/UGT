@@ -3,7 +3,7 @@
 #define FILE_OUTPUT 0
 #define STATISTICS 1
 #define PATH 0
-#define RESULTMAP 1
+#define RESULTMAP 0
 
 #if RESULTMAP
 #undef FILE_OUTPUT

@@ -8,17 +8,21 @@ class bitmap
 public:
 	const int bmcode = 0x4D42;
 	const int colorbit = 8;
-	enum ecolor
+	enum ecolor : unsigned char
 	{
 		black = 0x00,
 		red = 0x4F,
 		blue = 0xD2,
+		green = 0x71,
+		yellow = 0xFB,
 		white = 0xFF
 	};
 
 	bool read(const char* filename);
+	bool write(const char* filename);
 
-	const unsigned char get(int h, int w) const;
+	ecolor get(int h, int w) const;
+	void set(int h, int w, unsigned char p);
 	const int width() const { return ih.biWidth; }
 	const int height() const { return ih.biHeight; }
 	const std::vector<unsigned char>& data() const { return pixels; }
@@ -48,11 +52,10 @@ private:
 		unsigned int   biClrImportant;	/* Number of important colors */
 	};
 
-	void bitmap::set(int h, int w, unsigned char p);
-
 private:
 	bitmapfileheader fh;
 	bitmapinfoheader ih;
+	std::vector<unsigned char> mid;
 	std::vector<unsigned char> pixels;
 };
 
