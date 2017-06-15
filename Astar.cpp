@@ -36,10 +36,10 @@ bool pathfinder_a::find_path_with_astar()
 
 	while (!queue.empty())
 	{
-		dist_point current = queue.top();
+		point current = queue.top().pos;
 		queue.pop();
 
-		auto& current_node = searched[current.pos];
+		auto& current_node = searched[current];
 		if (is_closed(current_node))
 			continue;
 		set_closed(current_node);
@@ -47,29 +47,28 @@ bool pathfinder_a::find_path_with_astar()
 		static point direction[8] = { {0, -1}, {0, +1}, {-1, 0}, {+1, 0}, {-1, -1}, {-1, +1}, {+1, -1}, {+1, +1} };
 		for (int i = 0; i < 8; ++i)
 		{
+			if (!movable(current, direction[i]))
+				continue;
+
 			double dist = (i < 4) ? d_hz : d_dg;
 
-			point next_pos = current.pos + direction[i];
+			point next = current + direction[i];
 			double next_g = current_node.dist + dist;
-			double next_f = next_g + hvalue(next_pos);
-			if (!map.is_valid(next_pos))
-				continue;
-			if (map[next_pos] == etile::wall)
-				continue;
+			double next_f = next_g + hvalue(next);
 
-			auto& next_node = searched[next_pos];
+			auto& next_node = searched[next];
 			if (is_closed(next_node))
 				continue;
 			if (is_opened(next_node) && next_node.dist <= next_g)
 				continue;
-			next_node.prev = current.pos;
-			next_node.pos = next_pos;
+			next_node.prev = current;
+			next_node.pos = next;
 			next_node.dist = next_g;
 			set_opened(next_node);
 			
-			queue.emplace(next_pos, next_f);
+			queue.emplace(next, next_f);
 
-			if (next_pos == f)
+			if (next == f)
 				return true;
 		}
 	}

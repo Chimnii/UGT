@@ -4,8 +4,6 @@
 #include <functional>
 #include "Pathfinder.h"
 
-using direction = point;
-
 class pathfinder_j : public ipathfinder
 {
 public:

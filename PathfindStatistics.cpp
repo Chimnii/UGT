@@ -26,6 +26,11 @@ void pathfind_statistics::incr_closed()
 	++close_node;
 }
 
+void pathfind_statistics::incr_jumped()
+{
+	++jump_node;
+}
+
 void pathfind_statistics::set_begin_time()
 {
 	begin_time = std::chrono::steady_clock::now();

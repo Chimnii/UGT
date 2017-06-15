@@ -1,8 +1,8 @@
 #include "Pathfinder.h"
 
-double dist(const point& a, const point& b)
+double dist(const point& s, const point& f)
 {
-	return std::sqrt<int>((a.x-b.x)*(a.x-b.x) + (a.y-b.y)*(a.y-b.y));
+	return std::sqrt<int>((f.x-s.x)*(f.x-s.x) + (f.y-s.y)*(f.y-s.y));
 }
 
 ipathfinder::ipathfinder(tilemap& _map, std::vector<point>& _path, pathfind_statistics* _statistics, tilemap* _result_map)
@@ -37,6 +37,26 @@ bool ipathfinder::find_path(point s, point f)
 
 	if (statistics)
 		statistics->set_end_time();
+
+	return true;
+}
+
+bool ipathfinder::movable(point p, direction d)
+{
+	if (!map.is_valid(p+d))
+		return false;
+
+	if (map[p+d] == etile::wall)
+		return false;
+
+	if (d.x != 0 && d.y != 0)
+	{
+		point v(p.x, p.y+d.y);
+		point h(p.x+d.x, p.y);
+
+		if (map[v] == etile::wall && map[h] == etile::wall)
+			return false;
+	}
 
 	return true;
 }

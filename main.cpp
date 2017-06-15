@@ -18,7 +18,7 @@ int main()
 #endif
 
 	tilemap map;
-	map_reader reader(map, "Map\\map.bmp");
+	map_reader reader(map, "Map\\map3.bmp");
 	if (!map.initialized())
 	{
 		return 0;
@@ -66,6 +66,7 @@ void print()
 	std::cout << "path length : " << statistics.get_length() << std::endl;
 	std::cout << "open node : " << statistics.get_open_node() << std::endl;
 	std::cout << "close node : " << statistics.get_close_node() << std::endl;
+	std::cout << "jump node : " << statistics.get_jump_node() << std::endl;
 	std::cout << "elapsed time : " << statistics.get_elapsed_time_ms() << "ms" << std::endl;
 #endif
 

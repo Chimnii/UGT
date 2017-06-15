@@ -8,7 +8,7 @@ const double d_dg = std::sqrt<int>(2);
 
 const point invalid_pos(-1, -1);
 
-double dist(const point& a, const point& b);
+double dist(const point& s, const point& f);
 
 namespace std
 {
@@ -35,6 +35,8 @@ struct dist_point
 	double dist;
 };
 
+using direction = point;
+
 struct node
 {
 	point pos, prev;
@@ -56,6 +58,7 @@ public:
 
 protected:
 	virtual bool find_path_impl() = 0;
+	virtual bool movable(point p, direction d);
 	virtual bool is_opened(node& n);
 	virtual bool is_closed(node& n);
 	virtual void set_opened(node& n);

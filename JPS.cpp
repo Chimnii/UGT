@@ -1,5 +1,16 @@
 #include "JPS.h"
 
+direction make_direction(const point& s, const point& f)
+{
+	direction d(0, 0);
+	if (s == invalid_pos)
+		return d;
+
+	d.x = f.x > s.x ? 1 : (f.x == s.x ? 0 : -1);
+	d.y = f.y > s.y ? 1 : (f.y == s.y ? 0 : -1);
+	return d;
+}
+
 void pathfinder_j::init()
 {
 	ipathfinder::init();
@@ -16,8 +27,13 @@ bool pathfinder_j::find_path_impl()
 	statistics->set_length(n.dist);
 	while (n.prev != invalid_pos)
 	{
-		path.emplace_back(n.pos);
-		//write_resultmap(n.pos, etile::path);
+		direction dir = make_direction(n.pos, n.prev);
+		for (point p = n.pos; p != n.prev;)
+		{
+			path.emplace_back(p);
+			write_resultmap(p, etile::path);
+			p = p + dir;
+		}
 		n = searched[n.prev];
 	}
 	std::reverse(path.begin(), path.end());
@@ -48,17 +64,6 @@ bool pathfinder_j::find_path_with_jps()
 	return false;
 }
 
-direction make_direction(const point& s, const point& f)
-{
-	direction d(0, 0);
-	if (s == invalid_pos)
-		return d;
-
-	d.x = f.x > s.x ? 1 : (f.x == s.x ? 0 : -1);
-	d.y = f.y > s.y ? 1 : (f.y == s.y ? 0 : -1);
-	return d;
-}
-
 bool pathfinder_j::identify_successors(const point& current)
 {
 	auto& current_node = searched[current];
@@ -77,9 +82,14 @@ bool pathfinder_j::identify_successors(const point& current)
 		double next_f = next_g + dist(next, f);
 
 		auto& next_node = searched[next];
+		if (is_closed(next_node))
+			continue;
+		if (is_opened(next_node) && next_node.dist <= next_g)
+			continue;
 		next_node.prev = current;
 		next_node.pos = next;
 		next_node.dist = next_g;
+		set_opened(next_node);
 
 		successors.emplace(next, next_f);
 
@@ -127,6 +137,9 @@ bool is_diagonal(direction dir)
 }
 point pathfinder_j::jump(point current, direction dir)
 {
+	if (statistics)
+		statistics->incr_jumped();
+
 	point n = current+dir;
 	if (!map.is_valid(n) || map[n] == etile::wall)
 		return invalid_pos;
